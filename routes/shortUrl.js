@@ -1,11 +1,14 @@
 const express = require("express");
-const Url = require("../models/shortUrl");
-require("dotenv").config();
 const router = express.Router();
+const Url = require("../models/shortUrl");
 const { nanoid } = require("nanoid");
+const validator = require("validator");
+require("dotenv").config();
 
 router.post("/short", async (req, res) => {
   const { origUrl, id } = req.body;
+  if (!validator.isURL(origUrl))
+    return res.status(400).send({ message: "Enter valid url" });
   const base = process.env.BASE;
   const urlId = nanoid();
   try {
